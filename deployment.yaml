@@ -1,0 +1,29 @@
+
+                                                                    
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: backend
+          imagePullPolicy: Never
+          volumeMounts:   
+          - name : kafka-connect
+            mountPath : /data/
+      volumes:
+        - name: kafka-connect
+          persistentVolumeClaim:
+           claimName: kafka-connect
+      
+           

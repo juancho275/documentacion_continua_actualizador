@@ -32,13 +32,13 @@ class ConnectionAz:
             'Accept': 'application/json',
             'Authorization': 'Basic '+authorization
         }
-        os.system(f"mkdir -p repositorios/{project.name}")
+        os.system(f"mkdir -p data/repositorios/{project.name}")
         self.createJsonResponse(headers,repos,project)
 
     def createJsonResponse(self,headers,repos,project):
         json_repos = {}
         for repo in repos:
-            target_dir = os.path.join(os.getcwd(),"repositorios", project.name, repo.name)
+            target_dir = os.path.join(os.getcwd(),"data/repositorios", project.name, repo.name)
             os.system(f"mkdir -p {target_dir}")
             url = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/items/documentacion/README.md"
             url_commits = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/commits"
@@ -88,6 +88,6 @@ class ConnectionAz:
             time.sleep(60)
 
 
-obj = ConnectionAz("n3v2clv6wvup6hqnjfkvv5yuggnlyiooemrtewhpxqif7d5lnjsa","juancho270")
+obj = ConnectionAz("2xz6nxtaxqxsje2pvmkxuqjqbogru3dplxmdtkme5eq4qzp35ugq","isidorelucien123")
 while True:
     obj.startConnect()

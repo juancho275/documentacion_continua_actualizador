@@ -1,0 +1,671 @@
+<p><strong>NOMBRE DE LA INTEGRACIÓN O DEL API</strong></p>
+<p><strong>Área:</strong> Soluciones de Clientes</p>
+<p><strong>Analista Ágil:</strong> Juan Guillermo Montoya</p>
+<p><strong>Dominio:</strong> Clientes</p>
+<p><strong>Proyecto:</strong> Móvil Éxito</p>
+<p><strong>Palabras Clave:</strong> redención, PCO, acumulación</p>
+<p><strong>Infraestructura de despliegue:</strong> AKS,OKS, GCP, ODI, OSB</p>
+<p><strong>Sistemas Origen:</strong> Clifre, Teradata, Sinco </p>
+<p><strong>Sistemas Destino:</strong> Clifre, Teradata, Sinco, Kafka</p>
+<p><strong>Tipo desarrollo:</strong> Api, Worker, Batch, Modelo, Portal Web, Móvil ** main-pipeline.yml</p>
+<p><strong>Versión Lenguaje:</strong> NetCore, Java, Angular, Python, R</p>
+<p><strong>URL Consumo Api:</strong> https://wolframio.grupo-exito.com/apiew/producto/v1/HLZKHMELSEVH/swagger/index.html</p>
+<h4 id="tabla-de-contenido">Tabla de contenido</h4>
+<ul>
+<li><a href="#descripción-de-la-necesidad">Descripción de la necesidad</a></li>
+<li><a href="#diagrama-de-la-necesidad">Diagrama de la necesidad</a></li>
+<li><a href="#clasificacion-de-las-interfaces">Clasificacion de las Interfaces</a></li>
+<li><a href="#atributos-de-calidad-de-la-solucion">Atributos de calidad de la solucion</a></li>
+<li><a href="#diagrama-de-componentes-de-la-interfaz">Diagrama de componentes de la Interfaz</a></li>
+<li><a href="#consideraciones">Consideraciones</a></li>
+<li><a href="#mapeo-de-datos">Mapeo de datos</a></li>
+<li><a href="#mapeo_movil_exito_bolsillo">Mapeo Movil_Exito_Bolsillo</a></li>
+<li><a href="#mapeo_movil_exito_gestores">Mapeo Movil_Exito_Gestores</a></li>
+<li><a href="#mapeo_movil_exito_tipoajuste">Mapeo Movil_Exito_Tipoajuste</a></li>
+<li><a href="#características-técnicas-de-la-interfaz">Características técnicas de la Interfaz</a></li>
+<li><a href="#manejo-de-errores">Manejo de Errores</a></li>
+<li><a href="#manejo-de-reproceso">Manejo de reproceso</a></li>
+<li>
+<p><a href="#manual-de-despliegue">Manual de despliegue</a></p>
+</li>
+<li>
+<p><a href="#inventario-de-artefactos">Inventario de Artefactos</a></p>
+</li>
+<li><a href="#topologías">Topologías</a> </li>
+<li><a href="#directorios">Directorios</a></li>
+<li><a href="#Operaciones-de-la-Interfaz-(Servicio)">Operaciones de la Interfaz (Servicio)</a></li>
+</ul>
+<h4 id="descripcion-de-la-necesidad">Descripción de la necesidad</h4>
+<p>En esta sección, se debe especificar cual es la necesidad del negocio que se quiere solucionar, para describir la necesidad de acuerdo a los siguientes ítems:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Nombre de la interfaz:</strong></th>
+<th><strong>NOMBRE DE LA INTERACIÓN O API</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Qué</strong></td>
+<td>Especifique la necesidad que se quiere solucionar</td>
+</tr>
+<tr>
+<td><strong>Porqué</strong></td>
+<td>Especifique el por qué se necesita solucionar la necesidad</td>
+</tr>
+<tr>
+<td><strong>Para que</strong></td>
+<td>Especifique el objetivo que se desea alcanzar con la solución a implementar.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="diagrama-de-la-necesidad">Diagrama de la necesidad</h4>
+<p>A continuación mostramos algunos ejemplos:</p>
+<p><img alt="Diagrama" src="./Documentacion/diagrama-necesidad.png" /></p>
+<p><img alt="Diagrama" src="./Documentacion/diagrama-necesidad-actividades.png" /></p>
+<ul>
+<li>Especifique las notas puntales que sean relevantes para el proceso.</li>
+<li>Identifique las integraciones del diagrama de la necesidad y defina cuales están al alcance de este desarrollo.</li>
+<li>Una vez identificadas las integraciones dentro del alcance, defina una breve descripción de estas integraciones.</li>
+</ul>
+<h4 id="atributos-de-calidad-de-la-solucion">Atributos de calidad de la solución</h4>
+<p>Estas preguntas se puedes realizar enfocadas en el proceso de negocio que se está analizando para identificar los atributos de calidad:</p>
+<ol>
+<li>¿Con qué frecuencia se generan los mensajes o registros en un día?</li>
+<li>¿Qué cantidad de registros o mensajes se generan?</li>
+<li>¿Cuál es el crecimiento esperado para la generación de estos registros o mensajes?</li>
+<li>¿Cuánto tiempo se necesita para ejecutar el proceso?</li>
+<li>¿Cuál es el tiempo en que se espera tener la información?</li>
+<li>¿Cómo se comporta la información en un evento especial? En promociones, un día, hora en particular?</li>
+</ol>
+<p>En el siguiente link se encuentra una guía de preguntas....</p>
+<p>En la siguiente tabla se relacionan los atributos de calidad asociados a la solución:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Seguridad</strong></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Característica</strong></td>
+<td><strong>Observación</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Identificación y Autenticación</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Autorización</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Confidencialidad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Integridad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Auditabilidad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Desempeño</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Característica</strong></td>
+<td><strong>Observación</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Transacciones por Segundo</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Tiempo de Respuesta Máximo en Segundos</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Tiempo de Respuesta Promedio en Segundos</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Frecuencia</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Registros entregados en orden</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Escalamiento</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Característica</strong></td>
+<td><strong>Observación</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Cantidad Estimada de Transacciones por Día/Mes/Año</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Porcentaje de Crecimiento Estimado de Transacciones por Día/Mes/Año (%)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Disponibilidad</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Característica</strong></td>
+<td><strong>Observación</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Horario de Disponibilidad de la Solución</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Contingencia</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Manejo de errores</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Característica</strong></td>
+<td><strong>Observación</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Trazabilidad</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Endpoint o Partition Key</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Errores</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Alertamiento</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Monitoreo</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Reintentos</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="diagrama-de-componentes-de-la-interfaz">Diagrama de componentes de la Interfaz</h4>
+<p>En el siguiente diagrama de componentes se muestra el diseño de la integración y la relación con los diferentes componentes:
+Diagrama ejemplo para ODI:</p>
+<p><img alt="Diagrama" src="./Documentacion/diagrama-arquitectura.png" /></p>
+<p>Diagrama ejemplo para Azure:</p>
+<p><img alt="Diagrama" src="./Documentacion/diagrama-arquitectura-azure.png" /></p>
+<table>
+<thead>
+<tr>
+<th><strong>Nombre Componente</strong></th>
+<th><strong>Descripción del componente</strong></th>
+<th><strong>Responsabilidad</strong></th>
+<th><strong>Tipo</strong></th>
+<th><strong>Herramienta</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bolsillo</td>
+<td>Tabla fuente de SIME</td>
+<td>Almacena la información de SIME con respecto a los Bolsillos</td>
+<td>Tabla</td>
+<td>Microsoft SQL Server</td>
+</tr>
+<tr>
+<td>TipoBolsillo</td>
+<td>Tabla fuente de SIME</td>
+<td>Almacena la información de SIME con respecto a los TipoBolsillos</td>
+<td>Tabla</td>
+<td>Microsoft SQL Server</td>
+</tr>
+<tr>
+<td>Gestor</td>
+<td>Tabla fuente de SIME</td>
+<td>Almacena la información de SIME con respecto a los Gestores</td>
+<td>Tabla</td>
+<td>Microsoft SQL Server</td>
+</tr>
+<tr>
+<td>TipoAjuste</td>
+<td>Tabla fuente de SIME</td>
+<td>Almacena la información de SIME con respecto a los TipoAjustes</td>
+<td>Tabla</td>
+<td>Microsoft SQL Server</td>
+</tr>
+<tr>
+<td>PKG_SIME_TERA</td>
+<td>Paquete principal de ODI.</td>
+<td>Paquete el cual invoca la ejecución de los paquetes PKG_SIME_TERA_BOLSILLO,  PKG_SIME_TERA_GESTORES y PKG_SIME_TERA_TIPOAJUSTE</td>
+<td>Paquete</td>
+<td>ODI</td>
+</tr>
+<tr>
+<td>PKG_SIME_TERA_BOLSILLO</td>
+<td>Paquete secundario de ODI.</td>
+<td>Paquete de ODI encargado de transportar la información de los bolsillos desde la aplicación SIME hacia Teradata.</td>
+<td>Paquete</td>
+<td>ODI</td>
+</tr>
+<tr>
+<td>PKG_SIME_TERA_GESTORES</td>
+<td>Paquete secundario de ODI.</td>
+<td>Paquete de ODI encargado de transportar la información de los gestores desde la aplicación SIME hacia Teradata.</td>
+<td>Paquete</td>
+<td>ODI</td>
+</tr>
+<tr>
+<td>PKG_SIME_TERA_TIPOAJUSTE</td>
+<td>Paquete secundario de ODI.</td>
+<td>Paquete de ODI encargado de transportar la información de los tipos de ajuste desde la aplicación SIME hacia Teradata.</td>
+<td>Paquete</td>
+<td>ODI</td>
+</tr>
+<tr>
+<td>DEFINED_VALUE_TYPE_NEW</td>
+<td>Tabla destino Teradata</td>
+<td>Tabla de TERADATA que almacena los datos de Bolsillos junto con los Tipos de bolsillos</td>
+<td>Tabla</td>
+<td>Teradata</td>
+</tr>
+<tr>
+<td>GESTORES_TELEFONIA_NEW</td>
+<td>Tabla destino Teradata</td>
+<td>Tabla de TERADATA que almacena los datos de Gestores telefonia</td>
+<td>Tabla</td>
+<td>Teradata</td>
+</tr>
+<tr>
+<td>TIPO_AJUSTE_RECARGAS_TELEFONIA</td>
+<td>Tabla destino Teradata</td>
+<td>Tabla de TERADATA que almacena los datos de los ajustes de las recargas</td>
+<td>Tabla</td>
+<td>Teradata</td>
+</tr>
+</tbody>
+</table>
+<h4 id="consideraciones">Consideraciones</h4>
+<p>​   En esta sección especificar  las consideraciones relevantes de la solución a construir.</p>
+<ul>
+<li>Este diagrama no es necesario cuando se construye un servicio simple, se crearía el diagrama de secuencia.</li>
+<li>Este diagrama debe contemplar el reproceso de la información y el punto desde donde reenviaría la información.</li>
+<li>Especificar si es una cola, un servicio que se debe definir.</li>
+</ul>
+<h4 id="mapeo-de-datos">Mapeo de datos</h4>
+<p>En las siguientes tablas se relacionan el mapeo de datos entre el mensaje interno capa integración y el mensaje de los proveedores de la Interfaz:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Mapeo de datos</strong></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nombre del componente:</strong> escriba el nombre del componente</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Nombre Del destino:</strong> especifique el nombre del componente destino</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Enrutamiento:</strong> /</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Campo Destino</strong></td>
+<td><strong>Transformación</strong></td>
+<td><strong>Origen</strong></td>
+<td><strong>Campo Origen</strong></td>
+<td><strong>Comentarios</strong></td>
+</tr>
+<tr>
+<td>nombre campo destino 1</td>
+<td>tipo de transformación</td>
+<td>Tipo campo origen 1</td>
+<td>Nombre campo origen 1</td>
+<td>Especifique algun comentario releventa del campo</td>
+</tr>
+</tbody>
+</table>
+<h4 id="caracteristicas-tecnicas-de-la-interfaz-aplica-para-integraciones-odi">Características técnicas de la Interfaz (Aplica para integraciones ODI)</h4>
+<p>Las hojas técnicas de infraestructura son relacionadas en la siguiente tabla:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Características Técnicas Desarrollo</strong></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sistema</strong></td>
+<td><strong>Tipo</strong></td>
+<td><strong>Host</strong></td>
+<td><strong>Port</strong></td>
+<td><strong>Usuario</strong></td>
+<td><strong>Password</strong></td>
+<td><strong>Nombre del recurso</strong></td>
+</tr>
+<tr>
+<td>Staging de ODI</td>
+<td>Base de datos</td>
+<td>OSBDLLODB</td>
+<td>1541</td>
+<td>ODIV12213</td>
+<td></td>
+<td>ODIDEV12</td>
+</tr>
+<tr>
+<td>Servidor de aplicaciones de ODI</td>
+<td>Servidor de aplicaciones</td>
+<td>ODIDLLO</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SIME</td>
+<td>Base de datos</td>
+<td>296SQLP03</td>
+<td>1433</td>
+<td>usrodidev</td>
+<td></td>
+<td>SIME_CUBE</td>
+</tr>
+<tr>
+<td>TERADATA</td>
+<td>Base de datos</td>
+<td>exitocol6-3-2.grupo-exito.com</td>
+<td></td>
+<td>usrodidev</td>
+<td></td>
+<td>bd_rdb</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>Características Técnicas Calidad</strong></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sistema</strong></td>
+<td><strong>Tipo</strong></td>
+<td><strong>Host</strong></td>
+<td><strong>Port</strong></td>
+<td><strong>Usuario</strong></td>
+<td><strong>Password</strong></td>
+<td><strong>Nombre del recurso</strong></td>
+</tr>
+<tr>
+<td>Staging de ODI</td>
+<td>Base de datos</td>
+<td>BDQA</td>
+<td>1521</td>
+<td>ODIV12213</td>
+<td></td>
+<td>ODIQASTG</td>
+</tr>
+<tr>
+<td>Servidor de aplicaciones de ODI</td>
+<td>Servidor de aplicaciones</td>
+<td>odiqa01</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SIME</td>
+<td>Base de datos</td>
+<td>296SQLP03</td>
+<td>1433</td>
+<td>usrodiqa</td>
+<td></td>
+<td>SIME_CUBE</td>
+</tr>
+<tr>
+<td>TERADATA</td>
+<td>Base de datos</td>
+<td>exitocol6-3-2.grupo-exito.com</td>
+<td></td>
+<td>usrodiqa</td>
+<td></td>
+<td>bd_rdb</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nota: las aplicaciones SIME y TERADATA no cuentan con ambiente de calidad.</strong></p>
+<p>Esta integración esta orquestada por OPCON:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Parámetros OPCON</strong></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nombre de la Malla</strong></td>
+<td>NFORMACION-MAESTRAS-MOVIL-EXITO-A-TERA</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Tipo de Ejecución</strong></td>
+<td>Secuencial</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Frecuencia</strong></td>
+<td>Diario - 8:00 am - 12:00 pm - 5:00 pm</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Escenario</strong></td>
+<td><strong>Proyecto</strong></td>
+<td><strong>Fuente</strong></td>
+<td><strong>Destino</strong></td>
+</tr>
+<tr>
+<td>PKG_SIME_TERA_BOLSILLO</td>
+<td>MOVIL EXITO</td>
+<td>BOLSILLOS</td>
+<td>TERADATA</td>
+</tr>
+<tr>
+<td>PKG_SIME_TERA_GESTORES</td>
+<td>MOVIL EXITO</td>
+<td>GESTORES</td>
+<td>TERADATA</td>
+</tr>
+<tr>
+<td>PKG_SIME_TERA_TIPOAJUSTES</td>
+<td>MOVIL EXITO</td>
+<td>TIPO AJUSTE</td>
+<td>TERADATA</td>
+</tr>
+</tbody>
+</table>
+<h4 id="manejo-de-errores-aplica-para-integraciones-odi">Manejo de Errores  (Aplica para integraciones ODI)</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Si/No</strong></th>
+<th><strong>Cómo se realiza</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Notificaciones</td>
+<td>Si</td>
+<td>A través de Opcon</td>
+</tr>
+<tr>
+<td>Reintentos</td>
+<td>Si</td>
+<td>Se ejecuta de nuevo el proceso manualmente desde Opcon</td>
+</tr>
+<tr>
+<td>Trazabilidad</td>
+<td>Si</td>
+<td>En la tabla TBL_TRAZABILIDAD_ODI del satging de ODI.</td>
+</tr>
+<tr>
+<td>Contingencia</td>
+<td>No</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="manejo-de-reproceso-aplica-para-integraciones-odi">Manejo de reproceso  (Aplica para integraciones ODI)</h4>
+<p>Especificar los puntos en que se debe hacer el reproceso y cómo hacerlo.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Punto</strong></th>
+<th><strong>Como se reprocesa</strong></th>
+<th><strong>Aplicabilidad</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PKG_SIME_TERA_BOLSILLO</td>
+<td>Se debe ejecutar manualmente el paquete de ODI desde Opcon.</td>
+<td></td>
+</tr>
+<tr>
+<td>PKG_SIME_TERA_GESTORES</td>
+<td>Se debe ejecutar manualmente el paquete de ODI desde Opcon.</td>
+<td></td>
+</tr>
+<tr>
+<td>PKG_SIME_TERA_TIPOAJUSTES</td>
+<td>Se debe ejecutar manualmente el paquete de ODI desde Opcon.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Documentación del Api:</strong> a continuación se comparte la URL con la especificación técnica del Api</p>
+<p><strong>URL Consumo Api:</strong> https://wolframio.grupo-exito.com/apiew/producto/v1/HLZKHMELSEVH/swagger/index.html</p>
+<p><strong>Depuración de Archivos</strong> (Validar si ponerlo en el MAOS)</p>
+<p>...</p>
+<h3 id="instructivo-despliegue">Instructivo despliegue</h3>
+<h6 id="prerequisitos">Prerequisitos:</h6>
+<ol>
+<li>Creación de BD en Calidad y Producción, validar versiones entre ambientes.</li>
+</ol>
+<p><strong>Nota: Cómo validar las conexiones entre sistemas por ambientes, ambiente preproductivo.</strong></p>
+<ol>
+<li>
+<p>Creación y validación de conexión de usuarios genéricos para:</p>
+</li>
+<li>
+<p>BD</p>
+</li>
+<li>Mongo</li>
+<li>
+<p>Rabbit</p>
+</li>
+<li>
+<p>Ejecutar los scripts en bases de datos en el siguiente orden:</p>
+</li>
+<li>
+<p>scripts</p>
+</li>
+<li>
+<p>Setear en la librería stage-nombre-libreria  las variables para ambiente caliad y producción:</p>
+</li>
+<li>
+<p>variable1</p>
+</li>
+<li>variable2</li>
+<li>
+<p>variable3</p>
+</li>
+<li>
+<p>Ajustar los recursos necesarios para los namespaces de calidad y producción basado en informe de consumo de recursos, autoescalamientos, etc.</p>
+</li>
+<li>Creación de Path par Logs y Archivos</li>
+</ol>
