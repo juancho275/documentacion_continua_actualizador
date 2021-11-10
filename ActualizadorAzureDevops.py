@@ -9,65 +9,82 @@ import base64
 import os
 import json
 import time
+import logging
+
 
 class ConnectionAz:
-    
-    def __init__(self,token,organization):
+
+    def __init__(self, token, organization):
         load_dotenv()
         self.personal_access_token = token
-        self.organization= organization
+        self.organization = organization
         self.organization_url = f"https://dev.azure.com/{organization}"
         self.first = True
         # Create a connection to the org
         self.credentials = BasicAuthentication('', self.personal_access_token)
-        self.connection = Connection(base_url=self.organization_url, creds=self.credentials)
+        self.connection = Connection(
+            base_url=self.organization_url, creds=self.credentials)
         # Get a client (the "core" client provides access to projects, teams, etc)
         self.core_client = self.connection.clients.get_core_client()
 
-    def clone_or_pull_repos_for_project_id(self,project):
+    def clone_or_pull_repos_for_project_id(self, project):
         git_client = self.connection.clients.get_git_client()
         repos = git_client.get_repositories(project.id)
-        authorization = str(base64.b64encode(bytes(':'+self.personal_access_token, 'ascii')), 'ascii')
+        authorization = str(base64.b64encode(
+            bytes(':'+self.personal_access_token, 'ascii')), 'ascii')
         headers = {
             'Accept': 'application/json',
             'Authorization': 'Basic '+authorization
         }
         os.system(f"mkdir -p data/repositorios/{project.name}")
-        self.createJsonResponse(headers,repos,project)
+        self.createJsonResponse(headers, repos, project)
 
-    def createJsonResponse(self,headers,repos,project):
+    def createJsonResponse(self, headers, repos, project):
         json_repos = {}
         for repo in repos:
-            target_dir = os.path.join(os.getcwd(),"data/repositorios", project.name, repo.name)
+            target_dir = os.path.join(
+                os.getcwd(), "data/repositorios", project.name, repo.name)
             os.system(f"mkdir -p {target_dir}")
             url = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/items/documentacion/README.md"
             url_commits = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/commits"
-            commits = requests.get(url_commits, allow_redirects=True, headers=headers)
+            commits = requests.get(
+                url_commits, allow_redirects=True, headers=headers)
             response = commits.content.decode('utf8').replace("'", '"')
             data = json.loads(response)
-            self.conditionData(data,target_dir,url,project.name, repo.name)
-            
-        
+            self.conditionData(data, target_dir, url, project.name, repo.name)
 
-    def conditionData(self,data,target_dir,url, name_project, name_repo):
+    def conditionData(self, data, target_dir, url, name_project, name_repo):
         if len(data["value"]) > 0:
-                last_commit = datetime.strptime(data["value"][0]["author"]["date"], '%Y-%m-%dT%H:%M:%SZ')
-                if ((datetime.now()+timedelta(hours=5))-last_commit) < timedelta(seconds=70) or self.first:
+                last_commit = datetime.strptime(
+                data["value"][0]["author"]["date"], '%Y-%m-%dT%H:%M:%SZ')
+                logging.basicConfig(filename="newfile.log",
+				format='%(asctime)s %(message)s')
+                logger = logging.getLogger()
+                logger.setLevel(logging.DEBUG)
+                logger.info(datetime.now())
+                logger.info(last_commit)
+                logger.info((datetime.now())-last_commit)
+                logger.info((datetime.now()-last_commit) < timedelta(minutes=5))
+                if (datetime.now()-last_commit) < timedelta(minutes=5) or self.first:
                     if os.path.isdir(target_dir):
                         os.system(f"cd {target_dir}")
-                        os.system(f"curl -o {target_dir}/readme.md -u username:{self.personal_access_token} {url}")
+                        os.system(
+                            f"curl -o {target_dir}/readme.md -u username:{self.personal_access_token} {url}")
                         markdown.markdownFromFile(
                             input=f"{target_dir}/readme.md",
                             output=f"{target_dir}/readme.html",
-                            extensions=['markdown.extensions.tables','markdown.extensions.attr_list','markdown.extensions.toc']
+                            extensions=[
+                                'markdown.extensions.tables', 'markdown.extensions.attr_list', 'markdown.extensions.toc']
                         )
                     else:
                         os.system(f"cd {target_dir}")
-                        os.system(f"curl -o {target_dir}/readme.md -u username:{self.personal_access_token} {url}")
+                        os.system(
+                            f"curl -o {target_dir}/readme.md -u username:{self.personal_access_token} {url}")
                         markdown.markdownFromFile(
                             input=f"{target_dir}/readme.md",
                             output=f"{target_dir}/readme.html",
-                            extensions=['markdown.extensions.tables','markdown.extensions.attr_list','markdown.extensions.toc']
+                            extensions=[
+                                'markdown.extensions.tables', 'markdown.extensions.attr_list', 'markdown.extensions.toc']
                         )
 
     # # Get the first page of projects
@@ -86,6 +103,8 @@ class ConnectionAz:
                     get_projects_response = None
                 self.first=False
             time.sleep(60)
+
+
 
 
 obj = ConnectionAz("2xz6nxtaxqxsje2pvmkxuqjqbogru3dplxmdtkme5eq4qzp35ugq","isidorelucien123")
