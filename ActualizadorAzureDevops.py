@@ -163,7 +163,7 @@ class ConnectionAz:
                     # All projects have been retrieved
                     get_projects_response = None
                 self.first=False
-            time.sleep(15)
+            time.sleep(60)
             self.saveJson()
 
     def saveJson(self):
