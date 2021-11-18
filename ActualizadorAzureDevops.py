@@ -35,12 +35,12 @@ class ConnectionAz:
             'Accept': 'application/json',
             'Authorization': 'Basic '+authorization
         }
-        os.system(f"mkdir -p repositorios/{project.name}")
+        os.system(f"mkdir -p data/repositorios/{project.name}")
         self.createJsonResponse(headers,repos,project)
 
     def createJsonResponse(self,headers,repos,project):
         for repo in repos:
-            target_dir = os.path.join("repositorios", project.name, repo.name)
+            target_dir = os.path.join("data/repositorios", project.name, repo.name)
             os.system(f"mkdir -p {target_dir}")
             url = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/items/documentacion/README.md"
             url_commits = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/commits"
@@ -147,7 +147,18 @@ class ConnectionAz:
                 elif line == "Tabla de contenido":
                     estado=False
         estado=False
-        self.contenido["Dominio"] = "proyecto prueba"
+       
+        self.contenido["Dominio"] = "Dominio prueba"
+        self.contenido["Proyecto"] = "proyecto prueba"
+        self.contenido["Área"] = "Area prueba"
+        self.contenido["AnalistaÁgil"] = "Analista prueba"
+        self.contenido["PalabrasClave"] = "Palabras prueba"
+        self.contenido["Infraestructuradedespliegue"] = "Infraestructura prueba"
+        self.contenido["SistemasOrigen"] = "Sistema origen prueba"
+        self.contenido["SistemasDestino"] = "Sistema destino prueba"
+        self.contenido["Tipodesarrollo"] = "Desarrollo de  prueba"
+        self.contenido["VersiónLenguaje"] = "Lenguaje de  prueba"
+        self.contenido["URLConsumoApi"] = "Url de prueba"
         return self.contenido
 
     # # Get the first page of projects
@@ -167,11 +178,11 @@ class ConnectionAz:
             self.saveJson()
 
     def saveJson(self):
-        with open("data.json", 'w') as fp:
+        with open("data/data.json", 'w') as fp:
             json.dump(self.project_info,fp,indent=4)
 
 
 #obj = ConnectionAz("eskcnx77vwndptxnqfplx2whu5gfbeomhvoftv2vbqg3limly4lq","Grupo-exito")
-obj = ConnectionAz("w4bzl76t26s3zrivdpndppwwj4umbi4cfpr2ofdfcto5bkixcvgq", "juancho270")
+obj = ConnectionAz("45m3qee6tnbym7vv2nqugkwxrivk5kmd55vlojve7jufe5nyk7wq", "isidorelucien123")
 while True:
     obj.startConnect()
