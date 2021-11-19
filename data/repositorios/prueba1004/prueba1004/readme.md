@@ -1,12 +1,12 @@
 **NOMBRE DE LA INTEGRACIÓN O DEL API**
 
-**Área:** Soluciones de Clientes nuevos
+**Área:** Soluciones de Clientes
 
 **Analista Ágil:** Juan Guillermo Montoya
 
 **Dominio:** Clientes
 
-**Proyecto:** Móvil Éxito
+**Proyecto:** Móvil Éxito4
 
 **Palabras Clave:** redención, PCO, acumulación
 

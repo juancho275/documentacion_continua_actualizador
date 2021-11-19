@@ -1,12 +1,12 @@
 **NOMBRE DE LA INTEGRACIÓN O DEL API**
 
-**Área:** Desarrollo interno
+**Área:** Soluciones de Clientes
 
-**Analista Ágil:** Juan Carlos
+**Analista Ágil:** Juan Guillermo Montoya
 
-**Dominio:** Puntos Colombia
+**Dominio:** Clientes
 
-**Proyecto:** Móvil Éxito
+**Proyecto:** Móvil Éxito4
 
 **Palabras Clave:** redención, PCO, acumulación
 
