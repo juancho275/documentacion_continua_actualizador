@@ -56,7 +56,7 @@ class ConnectionAz:
     def conditionData(self,data,target_dir,url, name_project, name_repo):
         if len(data["value"]) > 0:
                 last_commit = datetime.strptime(data["value"][0]["author"]["date"], '%Y-%m-%dT%H:%M:%SZ')
-                if (datetime.now()-last_commit) < timedelta(minutes=5) or self.first:
+                if (datetime.now()-last_commit) < timedelta(minutes=75) or self.first:
                     self.contenido = {}
                     if os.path.isdir(target_dir):
                         os.system(f"cd {target_dir}")

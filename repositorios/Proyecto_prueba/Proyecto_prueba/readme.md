@@ -1,10 +1,10 @@
 **NOMBRE DE LA INTEGRACIÓN O DEL API**
 
-**Área:** Soluciones de Clientes
+**Área:** Desarrollo interno
 
-**Analista Ágil:** Juan Guillermo Montoya
+**Analista Ágil:** Juan Carlos
 
-**Dominio:** Clientes
+**Dominio:** Puntos Colombia
 
 **Proyecto:** Móvil Éxito
 
