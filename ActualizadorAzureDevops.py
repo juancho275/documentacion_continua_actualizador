@@ -7,9 +7,15 @@ import markdown
 import requests
 import base64
 import os
+from dotenv import load_dotenv
 import json
 import time
 import pickle
+
+
+load_dotenv()
+
+
 
 class ConnectionAz:
     
@@ -40,7 +46,7 @@ class ConnectionAz:
 
     def createJsonResponse(self,headers,repos,project):
         for repo in repos:
-            target_dir = os.path.join("data/repositorios", project.name, repo.name)
+            target_dir = os.path.join(os.getenv('RUTA_LECTURA'), project.name, repo.name)
             os.system(f"mkdir -p {target_dir}")
             url = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/items/documentacion/README.md"
             url_commits = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/commits"
@@ -148,17 +154,7 @@ class ConnectionAz:
                     estado=False
         estado=False
        
-        self.contenido["Dominio"] = "Dominio prueba"
-        self.contenido["Proyecto"] = "proyecto prueba"
-        self.contenido["Área"] = "Area prueba"
-        self.contenido["AnalistaÁgil"] = "Analista prueba"
-        self.contenido["PalabrasClave"] = "Palabras prueba"
-        self.contenido["Infraestructuradedespliegue"] = "Infraestructura prueba"
-        self.contenido["SistemasOrigen"] = "Sistema origen prueba"
-        self.contenido["SistemasDestino"] = "Sistema destino prueba"
-        self.contenido["Tipodesarrollo"] = "Desarrollo de  prueba"
-        self.contenido["VersiónLenguaje"] = "Lenguaje de  prueba"
-        self.contenido["URLConsumoApi"] = "Url de prueba"
+  
         return self.contenido
 
     # # Get the first page of projects
@@ -178,11 +174,17 @@ class ConnectionAz:
             self.saveJson()
 
     def saveJson(self):
-        with open("data/data.json", 'w') as fp:
+        with open(os.getenv('RUTA_JSON'), 'w') as fp:
             json.dump(self.project_info,fp,indent=4)
 
 
-#obj = ConnectionAz("eskcnx77vwndptxnqfplx2whu5gfbeomhvoftv2vbqg3limly4lq","Grupo-exito")
-obj = ConnectionAz("45m3qee6tnbym7vv2nqugkwxrivk5kmd55vlojve7jufe5nyk7wq", "isidorelucien123")
+obj = ConnectionAz(os.getenv('TOKEN'),os.getenv('ORGANIZACION'))
+#obj = ConnectionAz("qofgxgbj5rkwgz3jto33w3bartww6tqq5fl4dknaaxuebd5llnxa", "grupo-exito")
 while True:
     obj.startConnect()
+    
+
+
+	
+	
+	
