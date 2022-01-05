@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 import json
 import time
 import pickle
-
+import zipfile
+import io
 
 load_dotenv()
 
@@ -41,58 +42,133 @@ class ConnectionAz:
             'Accept': 'application/json',
             'Authorization': 'Basic '+authorization
         }
-        os.system(f"mkdir -p data/repositorios/{project.name}")
+        os.makedirs(f"./../documentacion_continua/data/repositorios/{project.name}", exist_ok = True)
         self.createJsonResponse(headers,repos,project)
 
     def createJsonResponse(self,headers,repos,project):
         for repo in repos:
             target_dir = os.path.join(os.getenv('RUTA_LECTURA'), project.name, repo.name)
-            os.system(f"mkdir -p {target_dir}")
-            url = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/items/documentacion/README.md"
+            os.makedirs(target_dir, exist_ok = True)
+
+            url = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/items?path=/documentacion/&$format=zip&download=true"
             url_commits = f"{self.organization_url}/{project.name}/_apis/git/repositories/{repo.name}/commits"
             commits = requests.get(url_commits, allow_redirects=True, headers=headers)
             response = commits.content.decode('utf8')
             data = json.loads(response)
             if project.name in self.project_info:
-                self.project_info[project.name][repo.name] = self.conditionData(data,target_dir,url,project.name, repo.name)
+                self.project_info[project.name][repo.name] = self.conditionData(data,target_dir, url, headers,project.name, repo.name)
             else:
-                self.project_info[project.name] = {}
-                self.project_info[project.name][repo.name] = self.conditionData(data,target_dir,url,project.name, repo.name)
+                self.project_info[project.name] = {f"{repo.name}" : {} }
+                print(project.name)
+                print(repo.name)
+                self.project_info[project.name][repo.name] = self.conditionData(data,target_dir, url, headers,project.name, repo.name)
 
-    def conditionData(self,data,target_dir,url, name_project, name_repo):
+    def conditionData(self,data,target_dir, url, headers, name_project, name_repo):
         if len(data["value"]) > 0:
                 last_commit = datetime.strptime(data["value"][0]["author"]["date"], '%Y-%m-%dT%H:%M:%SZ')
                 if (datetime.now()-last_commit) < timedelta(minutes=75) or self.first:
                     self.contenido = {}
-                    if os.path.isdir(target_dir):
-                        os.system(f"cd {target_dir}")
-                        os.system(f"curl -o {target_dir}/readme.md -u username:{self.personal_access_token} {url}")
-                        markdown.markdownFromFile(
-                            input=f"{target_dir}/readme.md",
-                            output=f"{target_dir}/readme.html",
-                            extensions=['markdown.extensions.tables','markdown.extensions.attr_list','markdown.extensions.toc']
-                        )
-                        self.contenido = self.conditionDataJson(target_dir)
-                        return self.contenido
+
+                    os.system(f"cd {target_dir}")
+                    # os.system(f"curl -o {target_dir}/README.md -u username:{self.personal_access_token} {url}")
+
+                    # donwload documents files
+                    print(f"Downloading... from: {url} \n")
+                    res_dir = requests.get(url, headers=headers)
+                    exist_readme = False
+                    if res_dir.status_code == 200:
+                        zip = zipfile.ZipFile(io.BytesIO(res_dir.content))
+                        zip.extractall(f'{target_dir}')
+
+                        # check if there is a img file in the folder
+                        # to save all the path and the img file into the static folder
+                        for zip_file in zip.filelist:
+                            zip_filename = zip_file.filename
+                            file_ext = zip_filename.split('.')[-1]
+
+                            if file_ext.lower() in ['jpeg', 'png', 'jpg', '.gif']:
+                                target_dir_img  = target_dir.replace('data', 'static/img')
+                                os.makedirs(target_dir_img, exist_ok = True)
+                                zip.extract(zip_filename, target_dir_img)
+                            if file_ext.lower() in ['md']:
+                                exist_readme = True
+                                readme_name = zip_filename
+
+
                     else:
-                        os.system(f"cd {target_dir}")
-                        os.system(f"curl -o {target_dir}/readme.md -u username:{self.personal_access_token} {url}")
+                        # when fails its because of it doesnot found the documentacion folder
+                        # so download directly the README.md
+                        print(f'Documentacion folder not found')
+                        for readme_name in ["README", "readme", "Readme"]:
+                            readme_name =  f"{readme_name}.md"                      
+                            url_readme = f"{self.organization_url}/{name_project}/_apis/git/repositories/{name_repo}/items/{readme_name}"
+                            print(f"Try donwoload {readme_name} in {url_readme}")
+                            res_md = requests.get(url_readme, headers=headers)
+
+                            if res_md.status_code == 200:
+                                os.makedirs(f"{target_dir}/documentacion", exist_ok= True )
+                                with open(f"{target_dir}/documentacion/{readme_name}", "wb") as f:
+                                    f.write(res_md.content)
+                                readme_name = f"/documentacion/{readme_name}"
+                                exist_readme = True
+
+                                break
+
+
+                    if not exist_readme:
+                        # ignore this repositorio
+                        return {}
+                    
+                    try:
                         markdown.markdownFromFile(
-                            input=f"{target_dir}/readme.md",
-                            output=f"{target_dir}/readme.html",
+                            input=f"{target_dir}/{readme_name}",
+                            output=f"{target_dir}/documentacion/readme.html",
                             extensions=['markdown.extensions.tables','markdown.extensions.attr_list','markdown.extensions.toc']
                         )
                         self.contenido = self.conditionDataJson(target_dir)
-                        return self.contenido
+                    except:
+                        with open(f"log.txt", 'a') as f:
+                            f.write(f"{url} \n")
+                            
+                        print(f"WARNING!!! cheg log.txt repo has something bad: {url}")
+                        return {}
+
+
+
+                    # Edit readme html file to modify the img src
+                    with open(f"{target_dir}/documentacion/readme.html", "r") as f:
+                        html = f.read()
+                        soup = BeautifulSoup(html, features="html.parser")
+
+                    all_img = soup.find_all('img')
+                    exits_src_img = False
+                    for img in all_img:
+                        nameFile = img['src'].split('/')[-1]
+                        file_ext = nameFile.split('.')[-1]
+                        # img src file also contains another formats
+                        if file_ext in ['jpeg', 'png', 'jpg', '.gif']:
+                            src_img = f"/static/img/{target_dir.split('/data/')[-1]}/documentacion/{nameFile}"
+                            img['src'] = src_img
+                            exits_src_img = True
+
+                    # save the edited soup html
+                    if exits_src_img:
+                        with open(f"{target_dir}/documentacion/readme.html", "w") as fw:
+                            fw.write(str(soup))
+
+                    return self.contenido
+
                 else:
                     return self.project_info[name_project][name_repo]
         else:
                 return self.project_info[name_project][name_repo]
 
     def conditionDataJson(self,target_dir):
-        f = open(f"{target_dir}/readme.html", "r")
+        f = open(f"{target_dir}/documentacion/readme.html", "r")
         html = f.read()
         soup = BeautifulSoup(html)
+
+
         
         # kill all script and style elements
         for script in soup(["script", "style"]):
@@ -106,7 +182,10 @@ class ConnectionAz:
         # drop blank lines
         text = '\n'.join(chunk for chunk in chunks if chunk)
         
-        self.contenido["dir_md"]=target_dir + "/readme.html"
+
+        target_dir_front = '/'.join(target_dir.split('/')[3:])
+
+        self.contenido["dir_md"]= f'./{target_dir_front}/documentacion/readme.html'
         estado = False
         for i,line in enumerate(text.splitlines()):
             if i + 1 == len(text.splitlines()):
@@ -153,7 +232,13 @@ class ConnectionAz:
                 elif line == "Tabla de contenido":
                     estado=False
         estado=False
-       
+
+        for nombreColumna in ['Dominio', 'Proyecto', 'Área', 'AnalistaÁgil', 'PalabrasClave',
+                'Infraestructuradedespliegue', 'SistemasOrigen', 'SistemasDestino', 'Tipodesarrollo',
+                'VersiónLenguaje', 'URLConsumoApi']:
+
+            if not self.contenido.get(nombreColumna):
+                self.contenido[nombreColumna] = 'Default'
   
         return self.contenido
 
@@ -177,9 +262,8 @@ class ConnectionAz:
         with open(os.getenv('RUTA_JSON'), 'w') as fp:
             json.dump(self.project_info,fp,indent=4)
 
-
 obj = ConnectionAz(os.getenv('TOKEN'),os.getenv('ORGANIZACION'))
-#obj = ConnectionAz("qofgxgbj5rkwgz3jto33w3bartww6tqq5fl4dknaaxuebd5llnxa", "grupo-exito")
+#obj = ConnectionAz("dbkw64dunfza546u5gee3ey7xbidvixqdhypoeiax7565bvudx4q", "grupo-exito")
 while True:
     obj.startConnect()
     
