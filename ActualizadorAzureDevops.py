@@ -263,7 +263,6 @@ class ConnectionAz:
             json.dump(self.project_info,fp,indent=4)
 
 obj = ConnectionAz(os.getenv('TOKEN'),os.getenv('ORGANIZACION'))
-#obj = ConnectionAz("dbkw64dunfza546u5gee3ey7xbidvixqdhypoeiax7565bvudx4q", "grupo-exito")
 while True:
     obj.startConnect()
     
